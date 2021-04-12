@@ -22,18 +22,36 @@
 
    ```
 
-- Instalamos Docker. La manera recomendada para implementar este sistema es utilizando [Docker](https://www.docker.com/), para instalarlo puedes seguir las instrucciones para cada sistema operativo haciendo clic [aquí](https://docs.docker.com/install/). Una vez instalado docker podemos ejecutar el siguiente comando (verificar que el servicio de Docker se encuentra corriendo):
+- Instalamos Docker. La manera recomendada para implementar este sistema es utilizando [Docker](https://www.docker.com/), para instalarlo puedes seguir las instrucciones para cada sistema operativo haciendo clic [aquí](https://docs.docker.com/install/).
+
+Antes de continuar con los siguientes comandos es necesario tomar en cuenta que las pruebas se realizaron bajo la versión 20.10.5 de Docker, a la cual le corresponde la versión 3.8 del archivo docker-compose. Para evitar algún inconveniente, es necesario revisar la versión que corresponda y modificarla en el archivo docker-compose.yml de acuerdo con la versión que se instale de Docker, esta información se puede consultar [aquí](https://docs.docker.com/compose/compose-file/compose-versioning/).
+
+- Una vez instalado docker podemos ejecutar el siguiente comando (verificar que el servicio de Docker se encuentra corriendo):
 
     ```shell
     $ docker-compose up -d db
     ```
 
+    En linux:
+
+    ```shell
+    $ sudo docker-compose up -d db
+    ```
+
     Este comando correrá el contenedor de docker con la base de datos a utilizar en el sistema de compras myshop, el cual seguirá corriendo en background hasta que sea detenido explícitamente.
+
+    Nota: Es posible que si se instala 
 
 - Para el correcto funcionamiento del sistema es necesario crear la base de datos, para esto debemos abrir una conexión con el contenedor de mysql, para lograrlo escribimos en la consola lo siguiente:
 
     ```shell
     $  docker-compose exec db sh
+    ```
+
+    En linux:
+    
+    ```shell
+    $ sudo docker-compose exec db sh
     ```
 
 - Otra forma de hacerlo es desde el cliente de docker, seleccionando la opción CLI del contenedor myshop_db como se muestra en la imagen:
@@ -47,7 +65,13 @@
     ```shell
     $  mysql -u root -p
     ```
-    Dentro de mysql, ejecutamos el siguiente comando para crear la base de datos:
+    Dentro de mysql, verificamos que se encuentre creada la base de datos 'myshop' con el siguiente comando:
+
+    ```shell
+    mysql>  SHOW databases;
+    ```
+
+    De no ser así, ejecutamos el siguiente comando para crearla:
 
     ```shell
     mysql>  CREATE DATABASE myshop CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
@@ -99,6 +123,12 @@
     $ docker-compose up -d web
     ```
 
+    En Linux:
+
+    ```shell
+    $ sudo docker-compose up -d web
+    ```
+
     Este comando levantará el contenedor de docker con el sistema de compras myshop, el cual seguirá corriendo en background hasta que sea detenido explícitamente.
 
 - Si el comando anterior se ejecutó con éxito, procederemos a aplicar las migraciones necesarias para django. Esto lo realizamos de la siguiente manera:
@@ -107,6 +137,12 @@
 
     ```shell
     $ docker-compose exec web sh
+    ```
+
+    En Linux:
+
+    ```shell
+    $ sudo docker-compose exec web sh
     ```
 
     Después de conectarnos, ejecutaremos los siguientes comandos:
@@ -123,26 +159,6 @@
 
     Cerramos la conexión con el contenedor escribiendo 'exit' y dando click al botón enter o simplemente cerrando la consola.
 
-   
-- Para completar el proceso será necesario importar los datos contenidos en el archivo .docker/setup.sql. Para esto nos conectamos al contenedor de myshop_db (mysql) de la misma forma que lo hicimos anteriormente:
-
-    ```shell
-    $  docker-compose exec db sh
-    ```
-
-   Ya conectados, ejecutamos el siguiente comando indicando el usuario y la contraseña (user = root, password = root):
-
-    ```shell
-    $ mysql -u root -p myshop < docker-entrypoint-initdb.d/setup.sql
-
-    ```
-   
-   Si la operación fue exitosa, salimos de mysql y cerramos la conexión con el contenedor escribiendo 'exit' y dando click al botón enter o simplemente cerrando la consola.
-
-- Si el comando fue exitoso, podremos ingresar al nuestro navegador y verificar que el sistema sigue funcionando con éxito y podemos ver los productos de la tienda en línea. Para esto, ingresamos a la siguiente url: 
-
-   > http://localhost:8000/
-
 - Otra manera de acceder al sistema myshop desde nuestro navegador es desde el cliente de Docker, dando click en el botón 'Open in Browser' del contenedor myshop_web como se muestra en la imagen:
 
     <p align="center">
@@ -151,15 +167,29 @@
 
 ## Ejecución
 
-- Para correr nuestros contenedores (después de realizar los pasos anteriores) debemos ejecutar los siguientes comandos:
+- Para iniciar nuestros contenedores debemos ejecutar los siguientes comandos:
 
     ```shell
-    $ docker-compose up -d web
-
     $ docker-compose up -d db
-
     ```
+    
+    ```shell
+    $ docker-compose up -d web
+    ```
+
+    En Linux:
+
+    ```shell
+    $ sudo docker-compose up -d db
+    ```
+
+    ```shell
+    $ sudo docker-compose up -d web
+    ```
+
     De esta forma podremos acceder al sistema myshop desde nuestro navegador.
+
+    Nota: Si se realizaron con éxito los pasos indicados en los prerrequisitos, no es necesario volver a iniciar los contenedores, esto solo se debe realizar en caso de que los contenedores se encuentren detenidos.
 
 - Otra manera de iniciar los contenedores es desde el cliente de Docker, dando click en el botón 'Start' como se muestra en la imagen:
 
@@ -171,8 +201,14 @@
 
     ```shell
     $ docker ps
-
     ```
+
+    En Linux:
+
+    ```shell
+    $ sudo docker ps
+    ```
+
     Este comando nos mostrará los contenedores que se encuentran corriendo, en la columna Status, debemos observar la palabra UP en los contenedores myshop_web y myshop_db. 
 
 - Otra manera de verificar que nuestros contenedores se encuentran activos es desde el cliente de Docker, debemos observar el ícono del contenedor de color verde como se muestra en la imagen:
@@ -185,7 +221,12 @@
 
     ```shell
     $ docker restart <container_name>
+    ```
 
+    En Linux:
+
+    ```shell
+    $ sudo docker restart <container_name>
     ```
 
 - Otra manera de reiniciar nuestros contenedores es desde el cliente de Docker, dando click en el botón 'Restart' como se muestra en la imagen:
@@ -199,8 +240,20 @@
 
     ```shell
     $  docker-compose exec db sh
+    ```
 
+    ```shell
     $  docker-compose exec web sh
+    ```
+
+    En Linux:
+
+    ```shell
+    $  sudo docker-compose exec db sh
+    ```
+
+    ```shell
+    $  sudo docker-compose exec web sh
     ```
 
 - Otra manera de acceder a la consola de nuestros contenedores es desde el cliente de Docker, dando click en el botón 'CLI' como se muestra en la imagen:
@@ -214,6 +267,12 @@
 
     ```shell
     $  docker stop <container_name>
+    ```
+
+    En Linux:
+
+    ```shell
+    $  sudo docker stop <container_name>
     ```
 
 - Otra manera de detener nuestros contenedores es desde el cliente de Docker, dando click en el botón 'Stop' como se muestra en la imagen:

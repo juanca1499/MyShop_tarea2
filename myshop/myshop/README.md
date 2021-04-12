@@ -1,6 +1,6 @@
-# Aplicación Cart - Sistema de Compras Myshop
+# Sistema de Compras MyShop
 
-Esta carpeta contiene el código fuente de la aplicación Cart, la cual forma parte del Sistema de Compras Myshop. El sistema fue desarrollado utilizando el Framework Django.
+Esta carpeta contiene código fuente del sistema MyShop. El sistema fue desarrollado utilizando el Framework Django.
 
 ## Estructura del Directorio
 

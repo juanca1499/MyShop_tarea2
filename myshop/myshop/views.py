@@ -13,25 +13,25 @@
 #           |         Nombre         |        Parámetros        |        Función        |
 #           +------------------------+--------------------------+-----------------------+
 #           |                        |  - request: datos de     |                       |
-#           |                        |    la solicitud.         |  - Muestra el         |
+#           |                        |    la solicitud.         |  - Muestra el template|
 #           |      error_400()       |                          |    de acuerdo con la  |
 #           |                        |  - exception: exepción   |    excepción recibida |
 #           |                        |    recibida.             |                       |
 #           +------------------------+--------------------------+-----------------------+
 #           |                        |  - request: datos de     |                       |
-#           |                        |    la solicitud.         |  - Muestra el         |
+#           |                        |    la solicitud.         |  - Muestra el template|
 #           |      error_403()       |                          |    de acuerdo con la  |
 #           |                        |  - exception: exepción   |    excepción recibida |
 #           |                        |    recibida.             |                       |
 #           +------------------------+--------------------------+-----------------------+
 #           |                        |  - request: datos de     |                       |
-#           |                        |    la solicitud.         |  - Muestra el         |
+#           |                        |    la solicitud.         |  - Muestra el template|
 #           |      error_404()       |                          |    de acuerdo con la  |
 #           |                        |  - exception: exepción   |    excepción recibida |
 #           |                        |    recibida.             |                       |
 #           +------------------------+--------------------------+-----------------------+
 #           |                        |  - request: datos de     |                       |
-#           |                        |    la solicitud.         |  - Muestra el         |
+#           |                        |    la solicitud.         |  - Muestra el template|
 #           |      error_500()       |                          |    de acuerdo con la  |
 #           |                        |  - exception: exepción   |    excepción recibida |
 #           |                        |    recibida.             |                       |
