@@ -1,6 +1,6 @@
-# Sistema de Compras - myshop
+# Sistema MyShop
 
-Esta carpeta contiene el código fuente del Sistema de Compras Myshop. El sistema fue desarrollado utilizando el Framework Django.
+Esta carpeta contiene el código fuente del Sistema Myshop. El sistema fue desarrollado utilizando el Framework Django.
 
 ## Estructura del Directorio
 

@@ -1,15 +1,17 @@
-# Arquitectura Modelo - Vista - Template
+# Arquitectura Model-View-Template
 
 ## Estructura del Directorio
 
-- myshop: Directorio que almacena el código fuente del Sistema de Compras Myshop.
+- myshop: Directorio que almacena el código fuente del Sistema MyShop.
 - docs: Directorio que almacena documentos auxiliares para este archivo.
 
-## Sistema de Compras - Myshop
+## Sistema MyShop
 
--- Descripción --
+MyShop es una tienda online que permite a los clientes navegar a través de un catálogo de productos, agregar productos a un carrito de compras, pagar el carrito y realizar un pedido. La confirmación y los datos del pedido se informan a los clientes vía email. Regularmente, el envío de los artículos de un pedido se realiza 30 horas después de haber confirmado el pedido.
 
--- Diagrama --
+A continuación se muestra una vista estática del diseño del sistema MyShop:
+
+![Vista estática del sistema MyShop](docs/diagrama_componentes.png)
 
 ## Prerrequisitos
 - Clonar el repositorio:
@@ -165,7 +167,86 @@ Antes de continuar con los siguientes comandos es necesario tomar en cuenta que 
         <img src="docs/proceso_myshop2.png" width="80%" height="80%">
     </p>
 
-## Ejecución
+- Si todo funcionó correctamente debemos poder ver la siguiente pantalla que muestra el sistema MyShop:
+
+    <p align="center">
+        <img src="docs/pantalla_myshop.png" width="90%" height="90%">
+    </p>
+
+
+## Desarrollo
+
+- Para el desarrollo del sistema es necesario contar con python 3.9 o superior y pip3 (las pruebas fueron realizadas con la versión 3.9.1). Se recomienda utilizar [pyenv](https://github.com/pyenv/pyenv) como manejador de versiones de python; una vez instalado se pueden seguir los siguientes comandos para instalar la versión deseada de python, esto hay que realizarlo en la raíz del repositorio:
+
+   ```shell
+   $ pyenv install 3.9.1
+   $ pyenv local 3.9.1
+   ```
+
+- Crear un ambiente virtual para manejar las dependencias ejecutando:
+   
+   ```shell
+   $ python3 -m venv venv
+   ```
+
+   en Windows:
+
+   ```shell
+   $ python3 -m venv venv
+   ```
+
+   si no funciona el comando anterior, ejecutar el siguiente:
+   ```shell
+   $ py -3 -m venv venv
+   ```
+
+   Esto creará una carpeta llamada "venv" que representa nuestro ambiente virtual y donde instalaremos todas las dependencias.
+
+- Activamos el ambiente virtual:
+   ```shell
+   $ source venv/bin/activate
+   ```
+
+   o en Windows:
+   ```shell
+   $ venv\Scripts\activate
+   ```
+
+- Instalamos las dependencias del microservicio ejecutando:
+   ```shell
+    (venv)$ cd myshop 
+
+    (venv)$ pip3 install -r requirements.txt 
+   ```
+
+   Los paquetes que se instalarán son los siguientes:
+
+    Paquete              |  Versión  | 
+   ----------------------|-----------|
+    django               |   3.1.7   |
+    mysqlclient          |   2.0.1   |
+    django-mysql         |   3.9     |
+    django-environ       |   0.4.5   |
+    django-cors-headers  |   3.5.0   |
+    Pillow               |   8.1.1   |
+    Celery               |   5.0.5   |
+
+### Ejecución del sistema en desarrollo
+
+- Dentro del directorio de myshop (en donde se encuentra el archivo manage.py) ejecutamos el siguiente comando:
+   ```shell
+   (venv)$ python manage.py runserver 0.0.0.0:8000 
+
+   ```
+
+- Si el comando fue exitoso, podremos ingresar a nuestro navegador y verificar que el sistema se ha iniciado con éxito, para esto, ingresamos a la siguiente url: 
+
+   > http://localhost:8000/
+
+Nota: Recordar que en este caso estamos probando el sistema sin la ayuda del contenedor de Docker. Esta ejecución se recomienda realizarla solamente durante desarrollo.
+
+
+## Comandos Docker
 
 - Para iniciar nuestros contenedores debemos ejecutar los siguientes comandos:
 
