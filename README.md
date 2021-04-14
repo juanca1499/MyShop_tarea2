@@ -42,7 +42,6 @@ Antes de continuar con los siguientes comandos es necesario tomar en cuenta que 
 
     Este comando correrá el contenedor de docker con la base de datos a utilizar en el sistema de compras myshop, el cual seguirá corriendo en background hasta que sea detenido explícitamente.
 
-    Nota: Es posible que si se instala 
 
 - Para el correcto funcionamiento del sistema es necesario crear la base de datos, para esto debemos abrir una conexión con el contenedor de mysql, para lograrlo escribimos en la consola lo siguiente:
 
@@ -176,7 +175,9 @@ Antes de continuar con los siguientes comandos es necesario tomar en cuenta que 
 
 ## Desarrollo
 
-- Para el desarrollo del sistema es necesario contar con python 3.9 o superior y pip3 (las pruebas fueron realizadas con la versión 3.9.1). Se recomienda utilizar [pyenv](https://github.com/pyenv/pyenv) como manejador de versiones de python; una vez instalado se pueden seguir los siguientes comandos para instalar la versión deseada de python, esto hay que realizarlo en la raíz del repositorio:
+- Nota: cada vez que realicemos cambios en nuestra aplicación django, los veremos reflejados de forma casi inmediata (siempre y cuando los contenedores Docker se encuentren en ejecución), esto debido a las configuraciones que se agregaron en el archivo docker-compose. Por esta razón para estar probando nuestro sistema en desarrollo no sería necesario realizar los siguientes pasos. Sin embargo, son añadidos como una opción extra para el desarrollo del sistema.
+
+- Es necesario contar con python 3.9 o superior y pip3 (las pruebas fueron realizadas con la versión 3.9.1). Se recomienda utilizar [pyenv](https://github.com/pyenv/pyenv) como manejador de versiones de python; una vez instalado se pueden seguir los siguientes comandos para instalar la versión deseada de python, esto hay que realizarlo en la raíz del repositorio:
 
    ```shell
    $ pyenv install 3.9.1
