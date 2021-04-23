@@ -85,4 +85,4 @@ def send(order_id, cart):
     body = message + message_part2 + message_part3 + message_part4
 
     # Se envía el correo.
-    send_mail(subject, body, '<your_email>', [order.email], fail_silently=False)
+    send_mail(subject, body, 'pruebas.jogglez@gmail.com', [order.email], fail_silently=False)
