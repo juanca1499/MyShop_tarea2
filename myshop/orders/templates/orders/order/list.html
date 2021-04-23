@@ -1,0 +1,48 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Orders list
+{% endblock %}
+
+{% block content %}
+    <h1>Orders list</h1>
+    <table class="cart">
+        <thead>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Postal Code</th>
+            <th>City</th>
+            <th>Created</th>
+            <th>Updated</th>
+            <th>Paid</th>
+            <th>Options</th>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{order.id}}</td>
+                    <td>{{order.first_name}}</td>
+                    <td>{{order.last_name}}</td>
+                    <td>{{order.email}}</td>
+                    <td>{{order.address}}</td>
+                    <td>{{order.postal_code}}</td>
+                    <td>{{order.city}}</td>
+                    <td>{{order.creaed}}</td>
+                    <td>{{order.update}}</td>
+                    {% if order.paid == 1 %}
+                        <td>Yes</td>
+                    {% else %}
+                        <td>No</td>
+                    {% endif %}
+                    <td>
+                        <a href="">Detail</a>
+                        <a href="">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>  
+{% endblock %}
