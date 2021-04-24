@@ -1,0 +1,16 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Order delete confirm
+{% endblock %}
+
+{% block content %}
+    {% if flag %}
+        <p>Are you sure that you want to delete the order with id {{order.id}}?</p>
+        <a href="{% url "delete_order_confirm" order.id %}" class="button">Yes, I am sure</a>
+    {% else %}
+        <p>24 hours have passed since the order {{order.id}} was placed, therefore it cannot be canceled</p>
+    {% endif %}
+    <a href="{% url "order_list" %}" class="button light">{{note}}</a>
+    <p></p
+{% endblock %}

@@ -22,26 +22,26 @@
         </thead>
         <tbody>
             {% for order in orders %}
-                <tr>
-                    <td>{{order.id}}</td>
-                    <td>{{order.first_name}}</td>
-                    <td>{{order.last_name}}</td>
-                    <td>{{order.email}}</td>
-                    <td>{{order.address}}</td>
-                    <td>{{order.postal_code}}</td>
-                    <td>{{order.city}}</td>
-                    <td>{{order.creaed}}</td>
-                    <td>{{order.update}}</td>
-                    {% if order.paid == 1 %}
-                        <td>Yes</td>
-                    {% else %}
-                        <td>No</td>
-                    {% endif %}
-                    <td>
-                        <a href="">Detail</a>
-                        <a href="">Delete</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>{{order.id}}</td>
+                        <td>{{order.first_name}}</td>
+                        <td>{{order.last_name}}</td>
+                        <td>{{order.email}}</td>
+                        <td>{{order.address}}</td>
+                        <td>{{order.postal_code}}</td>
+                        <td>{{order.city}}</td>
+                        <td>{{order.created}}</td>
+                        <td>{{order.updated}}</td>
+                        {% if order.paid == 1 %}
+                            <td>Yes</td>
+                        {% else %}
+                            <td>No</td>
+                        {% endif %}
+                        <td>
+                            <a href="{% url 'order_detail' order.id %}">Detail</a>
+                            <a href="{% url 'cancel_order' order.id %}">Cancel</a>
+                        </td>
+                    </tr>
             {% endfor %}
         </tbody>
     </table>  

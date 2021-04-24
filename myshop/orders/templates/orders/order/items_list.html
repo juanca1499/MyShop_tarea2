@@ -1,0 +1,38 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}
+    Order items list
+{% endblock %}
+
+{% block content %}
+    <h1>Order items list</h1>
+    <table class="cart">
+        <thead>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+        </thead>
+        <tbody>
+            {% for item in order_items %}
+                {% with product=item.product %}
+                    <tr>
+                        <td>{{item.id}}</td>
+                        <td>
+                            <a href="{{ product.get_absolute_url }}">
+                                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+                            </a>
+                        </td>
+                        <td>{{item.product}}</td>
+                        <td>{{item.price}}</td>
+                        <td>{{item.quantity}}</td>
+                    </tr>
+                {% endwith %}
+            {% endfor %}
+        </tbody>
+    </table>  
+{% endblock %}
+
+
