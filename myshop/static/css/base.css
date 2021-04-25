@@ -33,6 +33,11 @@ a.button.light {
     background:#ededed;
 }
 
+a.button.danger {
+    color: #ededed;
+    background: #fc746d;
+}
+
 .text-left {
     text-align:left;
 }

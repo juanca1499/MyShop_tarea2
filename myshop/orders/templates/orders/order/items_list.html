@@ -7,6 +7,13 @@
 
 {% block content %}
     <h1>Order items list</h1>
+    {% if flag == False %}
+      <b><p>24 hours have passed since the order {{order.id}} was placed, therefore it cannot be modified</p></b>
+    {% else %}
+    <p class="text-right">
+        <a class="button danger" href="{% url 'cancel_order' order.id %}">Cancel order</a>
+    </p>
+    {% endif %}
     <table class="cart">
         <thead>
             <th>ID</th>
@@ -14,6 +21,7 @@
             <th>Product</th>
             <th>Price</th>
             <th>Quantity</th>
+            <th>Remove Item</th>
         </thead>
         <tbody>
             {% for item in order_items %}
@@ -28,11 +36,39 @@
                         <td>{{item.product}}</td>
                         <td>{{item.price}}</td>
                         <td>{{item.quantity}}</td>
+                        <td>
+                            {% if flag %}
+                                <!--<a href="{% url 'remove_order_item' item.id %}">Remove item</a> -->
+                                <input type="checkbox" name="item" value="{{item.id}}">
+                            {% endif %}
+                        </td>
                     </tr>
                 {% endwith %}
             {% endfor %}
         </tbody>
-    </table>  
+    </table>
+    <p class="text-right">
+        <a class="button light" href="{% url 'order_list' %}">Return to order list</a>
+        {% if flag %}
+            <!-- <a id="confirm" class="button" href="{% url 'remove_order_confirm' order.id %}">Confirm changes</a> -->
+            <a id="confirm" class="button" onclick="getSelectedCheckboxValues('{% url 'print_values' %}','item')">Confirm changes</a>
+        {% endif %}
+    </p>
+
+<script type="text/javascript">
+    function getSelectedCheckboxValues(url,name) {
+    const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+    var urlValues = "?";
+    var counter = 1;
+    let values = [];
+    checkboxes.forEach((checkbox) => {
+        values.push(checkbox.value);
+        urlValues += counter + "=" + checkbox.value + "&";  
+        counter++;
+    });
+    urlValues = urlValues.slice(0,-1);
+    document.location.href = url + urlValues;
+}
+</script>
+            
 {% endblock %}
-
-

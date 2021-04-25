@@ -11,6 +11,6 @@
     {% else %}
         <p>24 hours have passed since the order {{order.id}} was placed, therefore it cannot be canceled</p>
     {% endif %}
-    <a href="{% url "order_list" %}" class="button light">{{note}}</a>
+    <a href="{% url "order_detail" order.id %}" class="button light">{{note}}</a>
     <p></p
 {% endblock %}

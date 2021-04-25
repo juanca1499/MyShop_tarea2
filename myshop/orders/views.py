@@ -77,7 +77,7 @@ def send(order_id, cart):
     subject = 'Order nr. {}'.format(order.id)
 
     # Se define el mensaje a enviar.
-    message = 'Dear {},\n\nYou have successfully placed an order. Your order id is {}.\n\n\n'.format(order.first_name,order.id)
+    message = 'Dear {},\n\nYou have successfully placed an order. The id your order is {}.\n\n\n'.format(order.first_name,order.id)
     message_part2 = 'Your order: \n\n'
     mesagges = []
 
@@ -87,32 +87,6 @@ def send(order_id, cart):
     
     message_part3 = ' '.join(mesagges)
     message_part4 = '\n\n\n Total: $'+ str(cart.get_total_price())
-    body = message + message_part2 + message_part3 + message_part4
-
-    # Se envía el correo.
-    send_mail(subject, body, 'pruebas.jogglez@gmail.com', [order.email], fail_silently=False)
-
-def send_cancel_order(order_id):
-    # Se obtiene la información de la orden.
-    order = Order.objects.get(id=order_id)
-
-    # Se crea el subject del correo.
-    subject = 'Order nr. {}'.format(order.id)
-
-    # Se define el mensaje a enviar.
-    message = 'Dear {},\n\nYou have successfully cancelled an order. The ID of your cancelled order is {}.\n\n\n'.format(order.first_name,order.id)
-    message_part2 = 'The following products were contained in your order: \n\n'
-    mesagges = []
-
-    order_items = []
-    order_items = OrderItem.objects.filter(order=order_id)
-
-    for item in order_items:
-        msg = str(item.quantity) + 'x '+ str(item.product.name) +'  $'+ str(item.get_cost())+ '\n'
-        mesagges.append(msg)
-    
-    message_part3 = ' '.join(mesagges)
-    message_part4 = '\n\n\n Date of cancellation: ' + datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
     body = message + message_part2 + message_part3 + message_part4
 
     # Se envía el correo.
@@ -144,16 +118,89 @@ def cancel_order(request, id):
                                                                       'note' : note})
 def delete_order_confirm(request, id):
     order = Order.objects.get(id=id)
-    send_cancel_order(order.id)
+    notas=['cancelled','were contained','cancellation']
+    confirm(order.id,notas)
     order.delete()
     return redirect('order_list')
 
 def order_detail(request, id):
     order = Order.objects.get(id=id)
+
+    flag = True
+    todays_date = datetime.now()
+    timezone = pytz.timezone(settings.TIME_ZONE)
+    todays_date_wo = timezone.localize(todays_date)
+    takeaway_hours = todays_date_wo - timedelta(hours=24)
+    
+    local_time = pytz.timezone(settings.TIME_ZONE)
+    order_date = order.created.replace(tzinfo=pytz.utc)
+    order_date = order_date.astimezone(local_time)
+
+    if (takeaway_hours > order_date):
+        flag = False
+
     order_items = []
     order_items = OrderItem.objects.filter(order=id)
     return render(request, 'orders/order/items_list.html', {'order' : order,
-                                                            'order_items' : order_items})
+                                                            'order_items' : order_items,
+                                                            'flag' : flag,})
 
-def cancel_items(request):
-    pass
+
+
+def remove_order_item(request, id):
+    order_item = OrderItem.objects.get(id=id)
+    order_id = str(order_item.order)
+    order_id = order_id[6:len(order_id)]
+    order_item.delete()
+    return redirect('order_detail', id = order_id)
+
+def remove_order_confirm(request, id):
+    notas=['modified','are still','modification']
+    update_confirmation(id)
+    confirm(id,notas)
+    return redirect('order_list')
+
+def confirm(order_id, notas):
+    # Se obtiene la información de la orden.
+    order = Order.objects.get(id=order_id)
+
+    # Se crea el subject del correo.
+    subject = 'Order nr. {}'.format(order.id)
+
+    # Se define el mensaje a enviar.
+    message = 'Dear {},\n\nYou have successfully {} your order. The number of your {} order is {}.\n\n\n'.format(order.first_name,notas[0],notas[0],order.id)
+    message_part2 = 'The following products {} in your order: \n\n'.format(notas[1])
+    mesagges = []
+
+    order_items = []
+    order_items = OrderItem.objects.filter(order=order_id)
+
+    for item in order_items:
+        msg = str(item.quantity) + 'x '+ str(item.product.name) +'  $'+ str(item.get_cost())+ '\n'
+        mesagges.append(msg)
+    
+    message_part3 = ' '.join(mesagges)
+    message_part4 = '\n\n\n Date of '+ notas[2] +' : ' + datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+    body = message + message_part2 + message_part3 + message_part4
+
+    # Se envía el correo.
+    send_mail(subject, body, 'pruebas.jogglez@gmail.com', [order.email], fail_silently=False)
+
+def update_confirmation(order_id):
+    # Se obtiene la información de la orden.
+    order = Order.objects.get(id=order_id)
+
+    # Se crea el subject del correo.
+    subject = 'Order nr. {}'.format(order.id)
+
+    # Se define el mensaje a enviar.
+    message = 'Dear {},\n\nYou have successfully updated your order. The number of your updated order is {}.\n'.format(order.first_name,order.id)
+
+    message_part2 = '\n\n Date of update : ' + datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+    body = message + message_part2
+
+    # Se envía el correo.
+    send_mail(subject, body, 'pruebas.jogglez@gmail.com', [order.email], fail_silently=False)
+
+def print_values(request):
+    print(str(request))
