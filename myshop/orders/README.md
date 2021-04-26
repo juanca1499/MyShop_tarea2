@@ -23,9 +23,16 @@ Esta carpeta contiene el código fuente de la aplicación Order, la cual forma p
 
 ## Versión
 
-1.0.0 - Marzo 2021
+1.0.1 - Abril 2021
 
 ## Autores
 
 * **Perla Velasco**
 * **Jorge Alfonso Solís**
+
+## Edición 
+* **Alejandro Carrillo Villegas**
+* **César Gabriel Díaz Curiel**
+* **Juan Carlos García Murillo**
+* **Josué Guillermo González Pinedo**
+* **José Germán González Rodarte**
