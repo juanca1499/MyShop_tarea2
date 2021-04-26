@@ -21,8 +21,7 @@ urlpatterns = [
     path('cancel_order/<int:id>',views.cancel_order,name='cancel_order'),
     path('delete_order_confirm/<int:id>',views.delete_order_confirm,name='delete_order_confirm'),
     path('order_detail/<int:id>',views.order_detail,name='order_detail'),
-    #re_path(r'^print_values/(?P<values>\w+)/$',views.print_values, name='print_values'),
-    path('print_values/',views.print_values, name='print_values'),
+    path('update-order/<int:id>',views.update_order, name='update_order'),
     path('remove_order_item/<int:id>',views.remove_order_item, name='remove_order_item'),
     path('remove_order_confirm/<int:id>',views.remove_order_confirm, name='remove_order_confirm'),   
 ]

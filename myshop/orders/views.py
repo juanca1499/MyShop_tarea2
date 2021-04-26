@@ -202,5 +202,19 @@ def update_confirmation(order_id):
     # Se envía el correo.
     send_mail(subject, body, 'pruebas.jogglez@gmail.com', [order.email], fail_silently=False)
 
-def print_values(request):
-    print(str(request))
+def update_order(request,id):
+    if request.method == "POST":
+        ids_to_delete = request.POST.getlist('item')
+        if len(ids_to_delete) > 0:
+            # Parcial order items deletion
+            for item_id in ids_to_delete:
+                order_item = OrderItem.objects.get(id=item_id)
+                order_item.delete()
+                     
+            update_confirmation(id)
+            confirm(id,['modified','are still','modification'])
+            return redirect('order_list')
+        else:
+            return redirect('order_detail')
+    else:
+        return redirect('order_detail')

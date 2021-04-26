@@ -14,61 +14,46 @@
         <a class="button danger" href="{% url 'cancel_order' order.id %}">Cancel order</a>
     </p>
     {% endif %}
-    <table class="cart">
-        <thead>
-            <th>ID</th>
-            <th>Image</th>
-            <th>Product</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Remove Item</th>
-        </thead>
-        <tbody>
-            {% for item in order_items %}
-                {% with product=item.product %}
-                    <tr>
-                        <td>{{item.id}}</td>
-                        <td>
-                            <a href="{{ product.get_absolute_url }}">
-                                <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
-                            </a>
-                        </td>
-                        <td>{{item.product}}</td>
-                        <td>{{item.price}}</td>
-                        <td>{{item.quantity}}</td>
-                        <td>
-                            {% if flag %}
-                                <!--<a href="{% url 'remove_order_item' item.id %}">Remove item</a> -->
-                                <input type="checkbox" name="item" value="{{item.id}}">
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endwith %}
-            {% endfor %}
-        </tbody>
-    </table>
-    <p class="text-right">
-        <a class="button light" href="{% url 'order_list' %}">Return to order list</a>
-        {% if flag %}
-            <!-- <a id="confirm" class="button" href="{% url 'remove_order_confirm' order.id %}">Confirm changes</a> -->
-            <a id="confirm" class="button" onclick="getSelectedCheckboxValues('{% url 'print_values' %}','item')">Confirm changes</a>
-        {% endif %}
-    </p>
+    <form action="{% url 'update_order' order.id %}" method="POST">
+        {% csrf_token %}
+        <table class="cart">
+            <thead>
+                <th>ID</th>
+                <th>Image</th>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Remove Item</th>
+            </thead>
+            <tbody>
+                {% for item in order_items %}
+                    {% with product=item.product %}
+                        <tr>
+                            <td>{{item.id}}</td>
+                            <td>
+                                <a href="{{ product.get_absolute_url }}">
+                                    <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+                                </a>
+                            </td>
+                            <td>{{item.product}}</td>
+                            <td>{{item.price}}</td>
+                            <td>{{item.quantity}}</td>
+                            <td>
+                                {% if flag %}
+                                    <input type="checkbox" name="item" value="{{item.id}}">
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <p class="text-right">
+            <a class="button light" href="{% url 'order_list' %}">Return to order list</a>
+            {% if flag %}
+                <button type="submit">Confirm changes</a>
+            {% endif %}
+        </p>
+    </form>
 
-<script type="text/javascript">
-    function getSelectedCheckboxValues(url,name) {
-    const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
-    var urlValues = "?";
-    var counter = 1;
-    let values = [];
-    checkboxes.forEach((checkbox) => {
-        values.push(checkbox.value);
-        urlValues += counter + "=" + checkbox.value + "&";  
-        counter++;
-    });
-    urlValues = urlValues.slice(0,-1);
-    document.location.href = url + urlValues;
-}
-</script>
-            
 {% endblock %}
