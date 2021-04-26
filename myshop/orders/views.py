@@ -24,7 +24,60 @@
 #           |                        |    la orden creada.      |    para notificar la  |
 #           |                        |                          |    compra.            |
 #           +------------------------+--------------------------+-----------------------+
-#
+#           |                        |                          |  - Extrae todas las   |
+#           |                        |  - request: datos de     |    ordenes creadas    |
+#           |    order_list()        |    la solicitud.         |    y las envia a      |
+#           |                        |                          |    un template.       |
+#           |                        |                          |                       |
+#           +------------------------+--------------------------+-----------------------+
+#           |                        |                          |                       |
+#           |   order_detail()       |  - request: datos de     |  - Muestra los        |
+#           |                        |    la solicitud.         |    detalles (items)   |
+#           |                        |                          |    de la orden        |
+#           |                        |  - id: id de la orden    |    especificada.      |
+#           |                        |    a visualizar.         |                       |
+#           |                        |                          |                       |
+#           +------------------------+--------------------------+-----------------------+
+#           |                        |                          |                       |
+#           |                        |  - request: datos de     |  - Extrae el elemento |
+#           |                        |    la solicitud.         |    order que se desea |
+#           |    cancel_order()      |                          |    eliminar y después |
+#           |                        |  - id: id del la orden   |    se lo envía por    |
+#           |                        |    que se desea eliminar.|    contexto a un      |
+#           |                        |                          |    template.          |
+#           +------------------------+--------------------------+-----------------------+
+#           |                        |                          |                       |
+#           |                        |  - request: datos de     |  - Elimina la orden   |
+#           |                        |    la solicitud.         |   correspondiente     |
+#           | cancel_order_confirm() |                          |   al order_id.        |
+#           |                        |  - id: id de la orden    |                       |
+#           |                        |    que se desea eliminar.|                       |                
+#           |                        |                          |                       |
+#           +------------------------+--------------------------+-----------------------+
+#           |                        |                          |                       |
+#           |                        |  - request: datos de     |  - Elimina los items  |
+#           |                        |    la solicitud.         |    seleccionados desde|
+#           |     update_order()     |                          |    el template.       |
+#           |                        |  - id: id de la orden a  |                       |
+#           |                        |    la que se le          |                       |
+#           |                        |    eliminarán items.     |                       |
+#           +------------------------+--------------------------+-----------------------+
+#           |                        |                          |  - Envía un email de  |
+#           |                        |  - order_id: id de la    |    confirmación con   |
+#           |     update_confirm()   |    orden a la que se     |    los datos de la    |
+#           |                        |    le eliminaron items   |    orden actualizados.|
+#           |                        |                          |                       |
+#           |                        |                          |                       |
+#           +------------------------+--------------------------+-----------------------+
+#           |                        |                          |  - Construye un       |
+#           |                        |  -order_id: id de la     |    mensaje genérico   |
+#           |                        |   orden a la que se le   |    que se enviará vía |
+#           |                        |   realizó un cambio.     |    email con los datos|
+#           |      confirm()         |                          |    del cambio que se  |
+#           |                        |  - notas: lista con los  |    le hizo a una      |
+#           |                        |    mensajes a usar.      |    orden.             |
+#           |                        |                          |                       |
+#           +------------------------+--------------------------+-----------------------+
 #--------------------------------------------------------------------------------------------------
 
 from django.shortcuts import render,redirect
@@ -97,26 +150,10 @@ def order_list(request):
     return render(request, 'orders/order/list.html', {'orders' : orders})
 
 def cancel_order(request, id):
-    order = Order.objects.get(id=id)
-    flag = True
-    note = "No, I am not sure"
-    todays_date = datetime.now()
-    timezone = pytz.timezone(settings.TIME_ZONE)
-    todays_date_wo = timezone.localize(todays_date)
-    takeaway_hours = todays_date_wo - timedelta(hours=24)
-    
-    local_time = pytz.timezone(settings.TIME_ZONE)
-    order_date = order.created.replace(tzinfo=pytz.utc)
-    order_date = order_date.astimezone(local_time)
+    order = Order.objects.get(id=id) 
+    return render(request, 'orders/order/cancel_order_confirm.html', {'order' : order})
 
-    if (takeaway_hours > order_date):
-        flag = False
-        note = "Return to order list"
- 
-    return render(request, 'orders/order/delete_order_confirm.html', {'order' : order,
-                                                                      'flag' : flag,
-                                                                      'note' : note})
-def delete_order_confirm(request, id):
+def cancel_order_confirm(request, id):
     order = Order.objects.get(id=id)
     notas=['cancelled','were contained','cancellation']
     confirm(order.id,notas)
@@ -124,41 +161,33 @@ def delete_order_confirm(request, id):
     return redirect('order_list')
 
 def order_detail(request, id):
-    order = Order.objects.get(id=id)
+    order = Order.objects.get(id=id)    #   Obtener id de la orden que se quiere consultar 
 
-    flag = True
-    todays_date = datetime.now()
-    timezone = pytz.timezone(settings.TIME_ZONE)
-    todays_date_wo = timezone.localize(todays_date)
-    takeaway_hours = todays_date_wo - timedelta(hours=24)
+    #   Variable que indica si ya han pasado o no las 24 horas desde que se confirmó la orden. 
+    # Flag igual a True indica que aún puede modificarse la orden, dado que no han pasado 24 horas.
+    # Flag igual a False indica que ya no puede modificarse la orden, dado que ya pasaron 24 horas.
+    flag = True  
+
+    todays_date = datetime.now() # Obtener fecha y hora del sistema (esta variable no considera la zona horaria)
+    timezone = pytz.timezone(settings.TIME_ZONE) # Se crea una zona horaria en formato tzfile basada en la zona horaria 
+                                                 # definida en el archivo settings del proyecto.
+
+    todays_date_wo = timezone.localize(todays_date) # Se asigna la zona horaria 'timezone' a la fecha del sistema 
+    takeaway_hours = todays_date_wo - timedelta(hours=24) # Se obtienen la fecha y hora exactas 24 antes de la fecha actual.
     
-    local_time = pytz.timezone(settings.TIME_ZONE)
+    # Se obtiene la fecha en la que fue confirmada la orden y se transforma a la zona horaria del sistema local (provista en el archivo settings). 
     order_date = order.created.replace(tzinfo=pytz.utc)
-    order_date = order_date.astimezone(local_time)
+    order_date = order_date.astimezone(timezone)
 
+    # ¿Ya pasaron 24 horas desde la confirmación del pedido?:
     if (takeaway_hours > order_date):
         flag = False
 
-    order_items = []
+    # Listar los artículos de la orden
     order_items = OrderItem.objects.filter(order=id)
     return render(request, 'orders/order/items_list.html', {'order' : order,
                                                             'order_items' : order_items,
                                                             'flag' : flag,})
-
-
-
-def remove_order_item(request, id):
-    order_item = OrderItem.objects.get(id=id)
-    order_id = str(order_item.order)
-    order_id = order_id[6:len(order_id)]
-    order_item.delete()
-    return redirect('order_detail', id = order_id)
-
-def remove_order_confirm(request, id):
-    notas=['modified','are still','modification']
-    update_confirmation(id)
-    confirm(id,notas)
-    return redirect('order_list')
 
 def confirm(order_id, notas):
     # Se obtiene la información de la orden.
@@ -180,13 +209,14 @@ def confirm(order_id, notas):
         mesagges.append(msg)
     
     message_part3 = ' '.join(mesagges)
-    message_part4 = '\n\n\n Date of '+ notas[2] +' : ' + datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
-    body = message + message_part2 + message_part3 + message_part4
+    message_part4 = '\n\n\n Total: $'+ str(order.get_total_cost())
+    message_part5 = '\n\n\n Date of '+ notas[2] +' : ' + datetime.today().strftime('%Y-%m-%d-%H:%M:%S')
+    body = message + message_part2 + message_part3 + message_part4 + message_part5
 
     # Se envía el correo.
     send_mail(subject, body, 'pruebas.jogglez@gmail.com', [order.email], fail_silently=False)
 
-def update_confirmation(order_id):
+def update_confirm(order_id):
     # Se obtiene la información de la orden.
     order = Order.objects.get(id=order_id)
 
@@ -204,17 +234,22 @@ def update_confirmation(order_id):
 
 def update_order(request,id):
     if request.method == "POST":
+        # Se extrae la lita de OrderItems seleccionadas.
         ids_to_delete = request.POST.getlist('item')
+        # Validamos que se haya seleccionado por lo menos un OrderItem.
         if len(ids_to_delete) > 0:
-            # Parcial order items deletion
-            for item_id in ids_to_delete:
-                order_item = OrderItem.objects.get(id=item_id)
-                order_item.delete()
-                     
-            update_confirmation(id)
-            confirm(id,['modified','are still','modification'])
-            return redirect('order_list')
-        else:
-            return redirect('order_detail')
-    else:
-        return redirect('order_detail')
+            # Se consulan los OrderItem que tiene que tiene la Order.
+            items_in_order = OrderItem.objects.filter(order=id)
+            # Si se seleccionaron todos los productos de la orden, 
+            # entonces se procede a una cancelación total.
+            if len(ids_to_delete) == len(items_in_order):
+                return cancel_order(request,id)
+            # De lo contrario, se procede a la cancelación parcial.
+            else:
+                for item_id in ids_to_delete:
+                    order_item = OrderItem.objects.get(id=item_id)
+                    order_item.delete()     
+                update_confirm(id)
+                confirm(id,['modified','are still','modification'])
+
+    return redirect('order_detail',id=id)

@@ -1,0 +1,12 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+    Order delete confirm
+{% endblock %}
+
+{% block content %}
+        <p>Are you sure that you want to delete the order with id {{order.id}}?</p>
+        <a href="{% url 'cancel_order_confirm' order.id %}" class="button">Yes, I am sure</a>
+        <a href="{% url 'order_detail' order.id %}" class="button light">I am not sure</a>
+        <p></p>
+{% endblock %}

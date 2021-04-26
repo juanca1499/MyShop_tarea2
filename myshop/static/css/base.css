@@ -19,7 +19,7 @@ a:hover {
     color:#77b6e2;
 }
 
-a.button, input[type="submit"] {
+a.button, input[type="submit"], button {
     color:#fff;
     background:#5993bb;
     border-radius:4px;
