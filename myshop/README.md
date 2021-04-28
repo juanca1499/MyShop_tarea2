@@ -37,19 +37,19 @@ Esta carpeta contiene el código fuente del Sistema Myshop. El sistema fue desar
     4. Damos click en nuestro usuario y seleccionamos la opción 'Gestionar tu cuenta de Google'.
 
     <p align="center">
-        <img src="docs/proceso_email.png" width="30%" height="30%">
+        <img src="../docs/proceso_email.png" width="30%" height="30%">
     </p>
 
     5. En el menú que se encuentra en el lado izquierdo seleccionamos la opción de 'Seguridad'.
 
     <p align="center">
-        <img src="docs/proceso_email2.png" width="80%" height="80%">
+        <img src="../docs/proceso_email2.png" width="80%" height="80%">
     </p>
 
     6. Navegamos hasta encontrar el apartado 'Acceso de aplicaciones poco seguras', si se encuentra desactivada la opción, procedemos a activarla.
 
     <p align="center">
-        <img src="docs/proceso_email3.png" width="80%" height="80%">
+        <img src="../docs/proceso_email3.png" width="80%" height="80%">
     </p>
 
     Nota: Al realizar estos pasos quedaría lista la configuración, posiblemente llegue a su bandeja de correo un email indicando el inicio de sesión, eso se debe a que la aplicación django está haciendo uso de su cuenta para el envío de correos.
