@@ -9,6 +9,11 @@
 
 MyShop es una tienda online que permite a los clientes navegar a través de un catálogo de productos, agregar productos a un carrito de compras, pagar el carrito y realizar un pedido. La confirmación y los datos del pedido se informan a los clientes vía email. Regularmente, el envío de los artículos de un pedido se realiza 30 horas después de haber confirmado el pedido.
 
+A partir de la versión 1.0.1, se ha implementado la funcionalidad para no poder cancelar pedidos después de 24 horas de haberse realizado. En el caso de que aún no haya pasado el tiempo límite de cancelación, se podrán hacer dos tipos de cancelaciones: total o parcial. 
+
+- La cancelación total envía al usuario un email de confirmación con los datos de dicha acción.
+- La cancelación parcial envía al usuario dos correos: uno de ellos informa la acción realizada y el segundo indica los productos que quedaron en el pedido.
+
 A continuación se muestra una vista estática del diseño del sistema MyShop:
 
 ![Vista estática del sistema MyShop](docs/diagrama_componentes.png)
